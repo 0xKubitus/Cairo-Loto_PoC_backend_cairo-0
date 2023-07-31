@@ -27,13 +27,13 @@ The concept is to provide players with an NFT for each ticket that will be purch
 2. compile `ozERC721MintBurnEnumUpgradable.cairo`:
 
 ```
-starknet-compile-deprecated contracts/OZ_Preset/ozERC721MintBurnEnumUpgradable.cairo --output compiled_contracts/ozERC721MintBurnEnumUpgradable_comp.json
+starknet-compile-deprecated ozERC721MintBurnEnumUpgradable.cairo --output ozERC721MintBurnEnumUpgradable_compiled.json
 ```
 
 3. declare contract:
 
 ```
-starknet declare --contract compiled_contracts/ozERC721MintBurnEnumUpgradable_comp.json --deprecated
+starknet declare --contract ozERC721MintBurnEnumUpgradable_compiled.json --deprecated
 ```
 
 4. deploy contract:
