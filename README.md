@@ -76,3 +76,12 @@ my PoC contract is deployed on testnet:
 - implement a lottery system;
 
 - TO BE CONTINUED
+
+<br>
+<br>
+<br>
+
+NOTE THAT 'tokenURI' MUST BE <= 31 CHARACTERS...  
+-> USE https://uri.to/ TO SHORTEN AN URI.  
+-> USE https://codebeautify.org/string-hex-converter TO CONVERT INTO HEX YOUR SHORTENED URI STRING.  
+:wink:
