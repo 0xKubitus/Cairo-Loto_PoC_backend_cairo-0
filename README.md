@@ -52,28 +52,21 @@ my PoC contract is deployed on testnet:
 
 # NEXT STEPS ARE:
 
-- Turn into comments all 'transfer' functionnalities,  
-  then use _upgrade()_ to change the deployed contract's class_hass to new version of the contract;
-
-- Take notes in Notion about 'how to upgrade a cairo-0 contract';
+- Connect backend with frontend + Test all features from frontend app;
 
 - Implement "permission_to_mint" logic and modify 'mint()' modify 'mint()' process  
   => when user makes multicall for payment, they should not be able to mint a ticket straight away, but they get "allowed_to_mint".  
   Then, only once allowed, the user will be able to mint from frontend;
 
-- Test 'mint()' and 'burn()' functions;
-
-- Adding metadata to all tokens (no need for each token to have its own unique jpeg for now);
-
-- connecting backend with frontend => try mint from frontend app + try multicall;
+- Use _upgrade()_ to change the deployed contract's class_hass to new version of the contract + Take notes in Notion about 'how to upgrade a cairo-0 contract';
 
 - burning ticket = getting money back;
+
+- implement a lottery system;
 
 - get in touch with DeFi protocols to know their testnet contract addresses;
 
 - manage sending users funds into liquidity pools;
-
-- implement a lottery system;
 
 - TO BE CONTINUED
 
@@ -81,7 +74,9 @@ my PoC contract is deployed on testnet:
 <br>
 <br>
 
-NOTE THAT 'tokenURI' MUST BE <= 31 CHARACTERS...  
--> USE https://uri.to/ TO SHORTEN AN URI.  
--> USE https://codebeautify.org/string-hex-converter TO CONVERT INTO HEX YOUR SHORTENED URI STRING.  
+## About TokenURI
+
+Note that your 'tokenURI' must be <= 31 characters long.  
+-> use https://uri.to/ to shorten an URI.  
+-> use https://codebeautify.org/string-hex-converter to convert into hex your shortened URI string (then, you will only need to add '0x' as prefix to make the felt representation of your string).  
 :wink:
