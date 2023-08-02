@@ -23,20 +23,20 @@ func ERC721_base_token_uri(index: felt) -> (res: felt) {
 func ERC721_base_token_uri_len() -> (res: felt) {
 }
 
-@storage_var
-func ERC721_base_token_uri_suffix() -> (res: felt) {
-}
+// @storage_var
+// func ERC721_base_token_uri_suffix() -> (res: felt) {
+// }
 
 //
 // Constructor
 //
 
-func ERC721_Metadata_initializer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    ) {
-    // register IERC721_Metadata
-    ERC165.register_interface(0x5b5e139f);
-    return ();
-}
+// func ERC721_Metadata_initializer{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+//     ) {
+//     // register IERC721_Metadata
+//     ERC165.register_interface(0x5b5e139f);
+//     return ();
+// }
 
 func ERC721_Metadata_tokenURI{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     token_id: Uint256
@@ -55,10 +55,11 @@ func ERC721_Metadata_tokenURI{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, ra
     let (token_uri_temp, token_uri_len_temp) = concat_arr(
         base_token_uri_len, base_token_uri, token_id_ss_len, token_id_ss
     );
-    let (ERC721_base_token_uri_suffix_local) = ERC721_base_token_uri_suffix.read();
-    let (local suffix) = alloc();
-    [suffix] = ERC721_base_token_uri_suffix_local;
-    let (token_uri, token_uri_len) = concat_arr(token_uri_len_temp, token_uri_temp, 1, suffix);
+    // let (ERC721_base_token_uri_suffix_local) = ERC721_base_token_uri_suffix.read();
+    // let (local suffix) = alloc();
+    // [suffix] = ERC721_base_token_uri_suffix_local;
+    let (token_uri, token_uri_len) = concat_arr(token_uri_len_temp, token_uri_temp);
+    // let (token_uri, token_uri_len) = concat_arr(token_uri_len_temp, token_uri_temp, 1, suffix);
 
     return (token_uri_len=token_uri_len, token_uri=token_uri);
 }
@@ -79,10 +80,11 @@ func _ERC721_Metadata_baseTokenURI{syscall_ptr: felt*, pedersen_ptr: HashBuiltin
 
 func ERC721_Metadata_setBaseTokenURI{
     syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
-}(token_uri_len: felt, token_uri: felt*, token_uri_suffix: felt) {
+// }(token_uri_len: felt, token_uri: felt*, token_uri_suffix: felt) {
+}(token_uri_len: felt, token_uri: felt*) {
     _ERC721_Metadata_setBaseTokenURI(token_uri_len, token_uri);
     ERC721_base_token_uri_len.write(token_uri_len);
-    ERC721_base_token_uri_suffix.write(token_uri_suffix);
+    // ERC721_base_token_uri_suffix.write(token_uri_suffix);
     return ();
 }
 

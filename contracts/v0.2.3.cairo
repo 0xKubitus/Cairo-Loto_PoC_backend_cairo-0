@@ -12,10 +12,10 @@ from openzeppelin.access.ownable.library import Ownable
 from openzeppelin.introspection.erc165.library import ERC165
 from openzeppelin.token.erc721.library import ERC721
 from openzeppelin.token.erc721.enumerable.library import ERC721Enumerable
-// from openzeppelin.upgrades.library import Proxy
+from openzeppelin.upgrades.library import Proxy
 
 from contracts.ERC721_Metadata_base import (
-    ERC721_Metadata_initializer,
+    // ERC721_Metadata_initializer,
     ERC721_Metadata_tokenURI,
     ERC721_Metadata_setBaseTokenURI,
 )
@@ -48,15 +48,17 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
     owner: felt, 
     base_token_uri_len: felt,
     base_token_uri: felt*,
-    token_uri_suffix: felt,
+    // token_uri_suffix: felt,
     // eth_address: felt
 ) {
     ERC721.initializer(name, symbol);
     ERC721Enumerable.initializer();
     Ownable.initializer(owner);
 
-    ERC721_Metadata_initializer();
-    ERC721_Metadata_setBaseTokenURI(base_token_uri_len, base_token_uri, token_uri_suffix);
+    // ERC721_Metadata_initializer(); // no need -> it's already being initialized by ERC721_initializer
+    // ERC721_Metadata_setBaseTokenURI(base_token_uri_len, base_token_uri, token_uri_suffix);
+    ERC721_Metadata_setBaseTokenURI(base_token_uri_len, base_token_uri);
+
 
     // Proxy.initializer(owner);
     // ETH_contract_addrs.write(eth_address);
@@ -161,14 +163,16 @@ func owner{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() ->
 //     return _imageURI();
 // }
 
+
+
 //
 // Externals
 //
 
 @external
 func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(
-    // to: felt, tokenId: Uint256
-    to: felt
+    // to: felt
+    to: felt, tokenId: Uint256
 ) {
     // Ownable.assert_only_owner();
     
@@ -190,10 +194,12 @@ func burn{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(token
 
 @external
 func setTokenURI{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(
-    base_token_uri_len: felt, base_token_uri: felt*, token_uri_suffix: felt
+    // base_token_uri_len: felt, base_token_uri: felt*, token_uri_suffix: felt
+    base_token_uri_len: felt, base_token_uri: felt*
 ) {
     Ownable.assert_only_owner();
-    ERC721_Metadata_setBaseTokenURI(base_token_uri_len, base_token_uri, token_uri_suffix);
+    ERC721_Metadata_setBaseTokenURI(base_token_uri_len, base_token_uri);
+    // ERC721_Metadata_setBaseTokenURI(base_token_uri_len, base_token_uri, token_uri_suffix);
     return ();
 }
 
