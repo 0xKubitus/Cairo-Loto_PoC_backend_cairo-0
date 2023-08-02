@@ -16,11 +16,11 @@ from contracts.utils.Array import concat_arr
 //
 
 @storage_var
-func ERC721_base_token_uri(index: felt) -> (res: felt) {
+func ERC721_base_token_uri_len() -> (res: felt) {
 }
 
 @storage_var
-func ERC721_base_token_uri_len() -> (res: felt) {
+func ERC721_base_token_uri(index: felt) -> (res: felt) {
 }
 
 // @storage_var
@@ -41,27 +41,39 @@ func ERC721_base_token_uri_len() -> (res: felt) {
 func ERC721_Metadata_tokenURI{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     token_id: Uint256
 ) -> (token_uri_len: felt, token_uri: felt*) {
+// Allocate space for local variables
     alloc_locals;
 
+    // Check if the ERC721 token with the given ID exists
     let exists = ERC721._exists(token_id);
     assert exists = 1;
 
-    let (local base_token_uri) = alloc();
+    // Allocate memory for storing the base token URI and retrieve its length
     let (local base_token_uri_len) = ERC721_base_token_uri_len.read();
+    let (local base_token_uri) = alloc();
 
     _ERC721_Metadata_baseTokenURI(base_token_uri_len, base_token_uri);
 
-    let (token_id_ss_len, token_id_ss) = uint256_to_ss(token_id);
-    let (token_uri_temp, token_uri_len_temp) = concat_arr(
-        base_token_uri_len, base_token_uri, token_id_ss_len, token_id_ss
-    );
-    // let (ERC721_base_token_uri_suffix_local) = ERC721_base_token_uri_suffix.read();
-    // let (local suffix) = alloc();
-    // [suffix] = ERC721_base_token_uri_suffix_local;
-    let (token_uri, token_uri_len) = concat_arr(token_uri_len_temp, token_uri_temp);
-    // let (token_uri, token_uri_len) = concat_arr(token_uri_len_temp, token_uri_temp, 1, suffix);
+// ####################################################
+// removed for proof of concept because I am not using suffix (each NFT having the same tokenURI)
 
-    return (token_uri_len=token_uri_len, token_uri=token_uri);
+    // // Transform 'token_id' into a shortstring and assign it to a variable
+    // let (token_id_ss_len, token_id_ss) = uint256_to_ss(token_id);
+    // // Concatenates 'token_uri_len', 'token_uri', and the shortstring created just before into a single array
+    // let (token_uri_temp, token_uri_len_temp) = concat_arr(
+    //     base_token_uri_len, base_token_uri, token_id_ss_len, token_id_ss
+    // );
+    // // assign 'token_uri_suffix' to a variable
+    // let (ERC721_base_token_uri_suffix_local) = ERC721_base_token_uri_suffix.read();
+    // // Allocate memory for 'suffix'
+    // let (local suffix) = alloc();
+    // // Read the value of 'ERC721_base_token_uri_suffix_local' and store it in 'suffix'
+    // [suffix] = ERC721_base_token_uri_suffix_local;
+    // // Concatenate 'token_uri_temp', 'token_uri_len_temp', and 'suffix' into the final 'token_uri' array
+    // let (token_uri, token_uri_len) = concat_arr(token_uri_len_temp, token_uri_temp, 1, suffix);
+// ####################################################
+
+    return (token_uri_len=base_token_uri_len, token_uri=base_token_uri);
 }
 
 func _ERC721_Metadata_baseTokenURI{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
@@ -70,8 +82,10 @@ func _ERC721_Metadata_baseTokenURI{syscall_ptr: felt*, pedersen_ptr: HashBuiltin
     if (base_token_uri_len == 0) {
         return ();
     }
+
     let (base) = ERC721_base_token_uri.read(base_token_uri_len);
     assert [base_token_uri] = base;
+
     _ERC721_Metadata_baseTokenURI(
         base_token_uri_len=base_token_uri_len - 1, base_token_uri=base_token_uri + 1
     );
