@@ -14,7 +14,7 @@ v0.2.2 - Each ticket/NFT minted gets its Metadata/tokenUri setup while being min
 
 v0.2.3 - Changing Metadata/tokenURI functions (taking inspiration from [starknet-edu's erc721 workshop](https://david-barreto.com/starknet-erc721-workshop-exercise-7/)).
 
-- [deployed contract v0.2.3](https://testnet.starkscan.co/contract/xxxxxxxxxxxxxxxx)
+- [deployed contract v0.2.3](https://testnet.starkscan.co/contract/0x003cf404e30e9b60fb0b788245b85c5ec89748c659002789a13c43324f945976)
 
 v0.3 - Adding payment condition for minting => Sneaky users who haven't paid should have no way to mint a ticket for free.
 
