@@ -16,6 +16,6 @@ v0.2.3 - Changing Metadata/tokenURI functions (taking inspiration from [starknet
 
 - [deployed contract v0.2.3](https://testnet.starkscan.co/contract/0x012e72b05501bb500c452482760535e69dd42b9e53ab2d0cdb736e54a7f4eaf4)
 
-v0.3 - Adding payment condition for minting => Sneaky users who haven't paid should have no way to mint a ticket for free.
+v0.3 - Each new ticket/NFT gets by itself its tokenId => No need to pass 'tokenId' arg anymore to 'mint()' ("total_tickets_sold: Uint256" added in Storage)
 
-v0.4 - Each new ticket/NFT gets by itself its tokenId => No need to pass 'tokenId' arg anymore to 'mint()' ("total_tickets_sold: Uint256" added in Storage)
+v0.3.1 - Adding payment condition for minting => Sneaky users who haven't paid should have no way to mint a ticket for free.
