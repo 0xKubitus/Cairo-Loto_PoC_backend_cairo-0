@@ -6,7 +6,7 @@
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.uint256 import Uint256
-from starkware.starknet.common.syscalls import get_caller_address // , get_contract_address
+from starkware.starknet.common.syscalls import get_caller_address, get_contract_address
 
 from openzeppelin.access.ownable.library import Ownable
 from openzeppelin.introspection.erc165.library import ERC165
@@ -193,13 +193,13 @@ func owner{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() ->
 @external
 func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(
     // to: felt, tokenId: Uint256
-    to: felt
+    // to: felt
 ) {
     // Ownable.assert_only_owner();
 
     let (eth_address) = ETH_contract_addrs.read();
     let (user_adrs) = get_caller_address();
-    let (PoC_account) = owner();
+    let (PoC_account) = get_contract_address();
     let (price: Uint256) = ticketPrice();
     with_attr error_message("Couldn't check ETH allowance") {
         let (allowed_amount: Uint256) = IERC20.allowance(contract_address=eth_address, owner=user_adrs, spender=PoC_account);
@@ -207,20 +207,38 @@ func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(
     with_attr error_message("incorrect ETH allowance") {
         assert allowed_amount = price;
     }
-    // If all the above is successful, then we can process the next steps
+    // // If all the above is successful, then we can process the next steps
 
-    // Getting paid
-    IERC20.transferFrom(contract_address=eth_address, sender=user_adrs, recipient=PoC_account, amount=price);
+        // NOTES FOR SELF:
+    // -> the ERC20 standard function 'transferFrom(sender, recipient, amount)' from the ETH contract will make a call 
+    // to the ERC20 standard function '_spend_allowance(owner, spender, amount).
 
-    // Minting NFT to user
+    // ATTENTION: Because '_spend_allowance()' requires that the caller == recipient of payment,
+    // NOTE THAT IT IS IMPOSSIBLE TO SET ANOTHER ADDRESS THAN THE TICKET MANAGER AS RECEIVER OF THE PAYMENT!
+    // (= I can not manage the users funds that I will receive as payments in a separate account contract)
+    
+    // https://github.com/OpenZeppelin/cairo-contracts/blob/main/src/openzeppelin/token/erc20/library.cairo#L118
+    // https://github.com/OpenZeppelin/cairo-contracts/blob/main/src/openzeppelin/token/erc20/library.cairo#L284
+
+    // // Getting paid
+    let (success) = IERC20.transferFrom(
+        contract_address=eth_address,
+        sender=user_adrs,
+        recipient=PoC_account,
+        amount=price
+    );
+    with_attr error_message("unable to charge the user") {
+        assert success = 1;
+    }
+
+    // Get the next TokenId
     let (last_token_id: Uint256) = total_tickets_sold.read();
     let (newTokenId: Uint256) = SafeUint256.add(last_token_id, Uint256(1, 0));
     total_tickets_sold.write(newTokenId);
 
-    ERC721Enumerable._mint(to, newTokenId);
+    // Minting NFT to user
+    ERC721Enumerable._mint(user_adrs, newTokenId);
 
-    // let (tokenURI: felt) = imageURI();
-    // setTokenURI(tokenId, tokenURI);
     return ();
 }
 

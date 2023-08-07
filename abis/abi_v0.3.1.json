@@ -328,12 +328,7 @@
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "name": "to",
-                "type": "felt"
-            }
-        ],
+        "inputs": [],
         "name": "mint",
         "outputs": [],
         "type": "function"

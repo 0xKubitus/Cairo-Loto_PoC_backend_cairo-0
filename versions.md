@@ -22,4 +22,14 @@ v0.3 - Each new ticket/NFT gets by itself its tokenId => No need to pass 'tokenI
 
 v0.3.1 - Adding payment condition for minting => Sneaky users who haven't paid should have no way to mint a ticket for free.
 
-- [deployed contract v0.3.1](https://testnet.starkscan.co/contract/0x0308495c7c3e1e18eb9fc61ef9edfa0a5ad8fc08cb817b97be3eeea667520cd2)
+- [deployed contract v0.3.1](https://testnet.starkscan.co/contract/0x014c435bf94da8de2babce6bed227327a7879c517268507ca2961f7bd7c0060e)
+
+v0.3.2 - Sending user funds to an account_contract, not the Tickets Manager contract (because Ticket Manager can't sign transactions, so can't do anything once a payment is received).
+
+- [deployed contract v0.3.2](https://testnet.starkscan.co/contract/0x049d1721d7111f21dfcec3b5cef592d96cf9e98281bd3db4139116f8f4f70c2e)
+
+<hr>
+
+## Next steps
+
+->
