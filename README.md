@@ -40,13 +40,16 @@ starknet declare --contract compiled_contracts/ozERC721MintBurnEnumUpgradable_co
 
 ```
 starknet deploy --class_hash 0x590624cb14c82ec9cfa19124fe1a26e4b7b1132ba0e845925734975754b1327 --inputs 0x4c6f7474657279204d5650 0x544b54 0x044bdc0da3aebf62380588ebc75cd404a6bab6581bc01133554a873137a963bc
-
 ```
+
+Note that with last versions of the compiler supporting cairo-0, converting every hex into felt/decimal representation for bash commands is not mandatory anymore.
 
 ## Contract is Live on Testnet!
 
-my PoC contract is deployed on testnet:
+my PoC contract is deployed on testnet:  
 -> contract address: 0x074ba6bd39ac4ca2b388f63a48aa31f72e1c26a54dce6aaad9f86c76a4e41f37
+
+# the above address needs to be updated with the final contract address!
 
 <br >
 

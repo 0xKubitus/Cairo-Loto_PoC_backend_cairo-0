@@ -1,4 +1,4 @@
-# Index of my contract's versions:
+\*\*\*\*# Index of my contract's versions:
 
 v0.0 - OpenZeppelin presets, not modified.
 
@@ -27,9 +27,33 @@ v0.3.1 - Adding payment condition for minting => Sneaky users who haven't paid s
 v0.3.2 - Sending user funds to an account_contract, not the Tickets Manager contract (because Ticket Manager can't sign transactions, so can't do anything once a payment is received).
 
 - [deployed contract v0.3.2](https://testnet.starkscan.co/contract/0x049d1721d7111f21dfcec3b5cef592d96cf9e98281bd3db4139116f8f4f70c2e)
+- commands to compile, declare and deploy:
 
+```
+starknet-compile-deprecated contracts/v0.3.2.cairo \
+--output compiled_contracts/v0.3.2_comp.json \
+--abi abis/abi_v0.3.2.json
+```
+
+```
+starknet declare --contract compiled_contracts/v0.3.2_comp.json --deprecated
+```
+
+```
+starknet deploy --class_hash 0x3caed0fb1be988597e27481634442941e81b9cdbd373dc6c986ba384cfb94b3 \
+--inputs 0x4c6f7474657279204d5650 0x544b54 1092614720383141198393700753811412438499788575996344362760598390946193035325 3 184555836509371486644298270517380613565396767415278678887948391494588524912 181013377130043935071660785332390857023363930029582306395061962390309589352 7334557041162323372692093093001635651741008 2087021424722619777119509474943472645767659996348769578120564519014510906823
+```
+
+</br>
 <hr>
+</br>
 
 ## Next steps
 
-->
+-> Implémenter le remboursement du ticket en cas de 'burn'.
+
+-> Trouver comment 'upgrade()' mon contrat (de cairo-0 à cairo-0 pour le moment), et prendre des notes.
+
+-> Travailler sur le systeme de tirage au sort.
+
+-> Contacter des projets DeFi avec Pools de Liquidités pour demander s'ils ont des contrats sur le testnet avec lesquels je pourrais interagir et tester mon projet.
