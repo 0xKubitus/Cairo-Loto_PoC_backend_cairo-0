@@ -192,7 +192,7 @@ func requestRandomNumber{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_c
 
     // return (request_id=request_id); // does not return anything... I assume external/invoke functions can't return stuff?
     // Maybe I should publish an event with the request_id???
-
+    
     return ();
 }
 
