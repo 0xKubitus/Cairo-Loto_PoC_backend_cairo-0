@@ -12,8 +12,7 @@ from starkware.starknet.common.syscalls import (
 from starkware.cairo.common.uint256 import Uint256
 from starkware.cairo.common.math import assert_not_zero, assert_le
 from starkware.cairo.common.cairo_builtins import HashBuiltin
-from starkware.cairo.common.hash import hash2
-
+from starkware.cairo.common.hash import hash2 // to be removed if not used
 
 from openzeppelin.upgrades.library import Proxy
 
@@ -159,7 +158,8 @@ func get_last_random{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check
 func get_last_request_id{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
     last_request_id: felt
 ) {
-    return last_request_id_storage.read();
+    let (last_request_id) = last_request_id_storage.read();
+    return (last_request_id=last_request_id);
 }
 
 
@@ -175,17 +175,19 @@ func runLotteryDraw{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_
 
     let (thisDraw) = currentDrawId();
 
-    let (request_address) = get_contract_address();
     let (nonce) = uint256_to_felt(thisDraw);
     let (block_timestamp) = get_block_timestamp();
+    let (my_hash) = hash2(nonce, block_timestamp); 
+    // let (my_hash) = hash2(x=nonce, y=block_timestamp); // triggers same error
+    //TODO: Understand how to make a hash, or ask for help!
 
-    let (seed) = hash2(request_address, hash2(nonce, block_timestamp));
+    let (seed) = hash2(ORACLE_ADDRESS, my_hash); 
     let (callback_address) = get_contract_address();
     let callback_gas_limit = 99999999999999;
     let publish_delay = 1;
     let num_words = 1;
 
-    let (request_id) = requestRandomNumber(seed, callback_address, callback_gas_limit, publish_delay, num_words);
+    let request_id = requestRandomNumber(seed, callback_address, callback_gas_limit, publish_delay, num_words);
 
     lotoStatus.write(1330660686);
 
@@ -211,7 +213,7 @@ func requestRandomNumber{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_c
     last_request_id_storage.write(request_id);
 
     // Maybe I should publish an event with the request_id?
-    RandomRequestSent.emit(request_id: felt);
+    RandomRequestSent.emit(request_id);
 
     // Get the current block number and calculate the minimum block number for randomness publication.
     let (current_block_number) = get_block_number();
@@ -253,6 +255,10 @@ func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 
     lotoStatus.write(1499838177848169747448773747777945406404318291);
 
+    // Update DrawId in the storage 
+    let (current_draw) = currentDrawId();
+    drawId.write(current_draw + 1);
+
     // Verify that the obtained random number corresponds to both:
         // -> an existing tokenId (in the deployed 'Tickets.cairo' contract);
         // -> a tokenId for which 'ownerOf' =/= 0;
@@ -267,9 +273,9 @@ func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 }
 
 // Calculates the gains and distributes the rewards
-fn distribute_rewards() {
+// fn distribute_rewards() {
     // to be implemented 
-}
+// }
 
 
 
