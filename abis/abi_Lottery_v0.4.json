@@ -1,0 +1,199 @@
+[
+    {
+        "members": [
+            {
+                "name": "low",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "high",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "Uint256",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+        "data": [
+            {
+                "name": "implementation",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "Upgraded",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "previousAdmin",
+                "type": "felt"
+            },
+            {
+                "name": "newAdmin",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "AdminChanged",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "request_id",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "RandomRequestSent",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "name": "lottery_init_state",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "currentDrawId",
+        "outputs": [
+            {
+                "name": "current_draw_id",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "currentDrawStatus",
+        "outputs": [
+            {
+                "name": "current_draw_status",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "draw_id",
+                "type": "Uint256"
+            }
+        ],
+        "name": "winningTicketId",
+        "outputs": [
+            {
+                "name": "winning_ticket_id",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_last_random",
+        "outputs": [
+            {
+                "name": "last_random",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "get_last_request_id",
+        "outputs": [
+            {
+                "name": "last_request_id",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "runLotteryDraw",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "seed",
+                "type": "felt"
+            },
+            {
+                "name": "callback_address",
+                "type": "felt"
+            },
+            {
+                "name": "callback_gas_limit",
+                "type": "felt"
+            },
+            {
+                "name": "publish_delay",
+                "type": "felt"
+            },
+            {
+                "name": "num_words",
+                "type": "felt"
+            }
+        ],
+        "name": "requestRandomNumber",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "requestor_address",
+                "type": "felt"
+            },
+            {
+                "name": "request_id",
+                "type": "felt"
+            },
+            {
+                "name": "random_words_len",
+                "type": "felt"
+            },
+            {
+                "name": "random_words",
+                "type": "felt*"
+            }
+        ],
+        "name": "receive_random_words",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_implementation",
+                "type": "felt"
+            }
+        ],
+        "name": "upgrade",
+        "outputs": [],
+        "type": "function"
+    }
+]

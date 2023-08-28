@@ -14,7 +14,6 @@ from starkware.cairo.common.math import assert_not_zero, assert_le
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.hash import hash2
 
-
 from openzeppelin.upgrades.library import Proxy
 
 from contracts.utils.UintToFelt import uint256_to_felt
@@ -263,6 +262,8 @@ func receive_random_words{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_
 
     // Call 'distribute_rewards()'
 
+    // Change lottery status to 'FINISHED'
+    
     return ();
 }
 

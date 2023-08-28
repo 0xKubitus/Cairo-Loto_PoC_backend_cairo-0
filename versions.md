@@ -44,13 +44,13 @@ starknet deploy --class_hash 0x3caed0fb1be988597e27481634442941e81b9cdbd373dc6c9
 --inputs 0x4c6f7474657279204d5650 0x544b54 1092614720383141198393700753811412438499788575996344362760598390946193035325 3 184555836509371486644298270517380613565396767415278678887948391494588524912 181013377130043935071660785332390857023363930029582306395061962390309589352 7334557041162323372692093093001635651741008 2087021424722619777119509474943472645767659996348769578120564519014510906823
 ```
 
-v0.4 - Creation of "LOTTERY.cairo" contract.
+v0.4 - Creation of "LOTTERY.cairo" contract + Clean-up & Refacto for better readability of the repo.
 
 - [deployed contract v0.4](https://testnet.starkscan.co/contract/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
 
-v0.5 - Clean-up / Refactorisation of the contract for better readability.
+v0.5 - .
 
-- [deployed contract v0.4](https://testnet.starkscan.co/contract/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+- [deployed contract v0.5](https://testnet.starkscan.co/contract/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
 
 </br>
 <hr>
