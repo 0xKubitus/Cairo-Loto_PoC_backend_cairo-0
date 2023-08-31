@@ -123,7 +123,7 @@ func ETH_contract_addrs() -> (eth_address: felt) {
 
     @view
     func ticketPrice{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (price: Uint256) {
-        let unit_price = Uint256(1000000000000000, 0);
+        let unit_price = Uint256(1000000000000000, 0); // this is 0,001 ETH
         return (price=unit_price);
     }
 
@@ -166,33 +166,22 @@ func ETH_contract_addrs() -> (eth_address: felt) {
 
         let (eth_address) = ETH_contract_addrs.read();
         let (user_adrs) = get_caller_address();
-        let (PoC_contract) = get_contract_address();
+        let (ticketsHandlerAdrs) = get_contract_address();
+        let (BookKeeper) = owner();
         let (price: Uint256) = ticketPrice();
         with_attr error_message("Couldn't check ETH allowance") {
-            let (allowed_amount: Uint256) = IERC20.allowance(contract_address=eth_address, owner=user_adrs, spender=PoC_contract);
+            let (allowed_amount: Uint256) = IERC20.allowance(contract_address=eth_address, owner=user_adrs, spender=ticketsHandlerAdrs);
         }
         with_attr error_message("incorrect ETH allowance") {
             assert allowed_amount = price;
         }
-        // If all the above is successful, then we can process the next steps
-
-            // NOTES FOR SELF:
-        // -> the ERC20 standard function 'transferFrom(sender, recipient, amount)' from the ETH contract will make a call 
-        // to the ERC20 standard function '_spend_allowance(owner, spender, amount).
-
-        // ATTENTION: Because '_spend_allowance()' requires that the caller == recipient of payment,
-        // => IT IS IMPOSSIBLE TO SET ANOTHER ADDRESS THAN THE TICKET MANAGER AS RECEIVER OF THE PAYMENT!
-        // (= I can not manage the users funds that I will receive as payments in a separate account contract)
-        
-        // https://github.com/OpenZeppelin/cairo-contracts/blob/main/src/openzeppelin/token/erc20/library.cairo#L118
-        // https://github.com/OpenZeppelin/cairo-contracts/blob/main/src/openzeppelin/token/erc20/library.cairo#L284
-
+        // If all the above is successful, then we can proceed to the next steps
 
         // Getting paid
         let (success) = IERC20.transferFrom(
             contract_address=eth_address,
             sender=user_adrs,
-            recipient=PoC_contract,
+            recipient=ticketsHandlerAdrs,
             amount=price
         );
         with_attr error_message("unable to charge the user") {
@@ -206,15 +195,6 @@ func ETH_contract_addrs() -> (eth_address: felt) {
 
         // Minting NFT to user
         ERC721Enumerable._mint(user_adrs, newTokenId);
-
-        // Send the user's funds to an account-contract (the 'owner' of this contract)
-        let (PoC_owner) = owner();
-        let (eth_address) = ETH_contract_addrs.read();
-        let (user_adrs) = get_caller_address();
-        let (price: Uint256) = ticketPrice();
-        // there must be a way not to have to declare again those variables,
-        // but if I don't I get an error: Reference 'xxx' was revoked.
-        IERC20.transfer(contract_address=eth_address, recipient=PoC_owner, amount=price);
 
         return ();
     }
