@@ -181,7 +181,8 @@ func ETH_contract_addrs() -> (eth_address: felt) {
         let (success) = IERC20.transferFrom(
             contract_address=eth_address,
             sender=user_adrs,
-            recipient=ticketsHandlerAdrs,
+            recipient=ticketsHandlerAdrs, // unless I am mistaken, it is impossible to have another recipient that "get_contract_address()" because of the ERC20 standard implementation of "transferFrom()" (=> https://github.com/OpenZeppelin/cairo-contracts/blob/main/src/openzeppelin/token/erc20/library.cairo#L122 -> _spend_allowance() takes the caller as recipient)
+            // I am most likely mistaken, though!! just need to think this through! :P
             amount=price
         );
         with_attr error_message("unable to charge the user") {
