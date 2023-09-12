@@ -46,7 +46,11 @@ starknet deploy --class_hash 0x3caed0fb1be988597e27481634442941e81b9cdbd373dc6c9
 
 v0.4 - Creation of "LOTTERY.cairo" contract + Clean-up & Refacto for better readability of the repo.
 
-- [deployed contract v0.4](https://testnet.starkscan.co/contract/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+- [deployed contract v0.4](https://testnet.starkscan.co/contract/0x025654448400d6078a4b9e09f6e90816bc63325996232aa1a69661c267354cab)
+
+v0.4.1 - Burn() function in TicketsHandler now also sends back the user's deposit to their account address.
+
+- [deployed contract v0.4.1](https://testnet.starkscan.co/contract/0x0x00a17ebcab44933a62ebc110edfa00c452f55b442a7c30fb4378ac6284570b09)
 
 v0.5 - .
 
