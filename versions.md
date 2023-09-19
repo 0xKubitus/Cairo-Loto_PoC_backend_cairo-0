@@ -52,7 +52,11 @@ v0.4.1 - Burn() function in TicketsHandler now also sends back the user's deposi
 
 - [deployed contract v0.4.1](https://testnet.starkscan.co/contract/0x0x00a17ebcab44933a62ebc110edfa00c452f55b442a7c30fb4378ac6284570b09)
 
-v0.5 - .
+v0.4.2 - Mint() now requires 10 USDC instead of 0.001 ETH.
+
+- [deployed contract v0.4.2](https://testnet.starkscan.co/contract/0x07c4e99af60f7466b03347dbe1faa4f788776bf5e934c8ab5a911a45ca64d566/)
+
+- v0.5 - xxx
 
 - [deployed contract v0.5](https://testnet.starkscan.co/contract/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
 
