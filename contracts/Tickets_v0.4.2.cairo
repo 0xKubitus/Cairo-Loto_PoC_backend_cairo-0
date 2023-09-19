@@ -35,7 +35,7 @@ func total_tickets_sold() -> (total_sold: Uint256) {
 // func ETH_contract_addrs() -> (eth_address: felt) {
 // }
 @storage_var
-func USDC_contract_addrs() -> (usdc_address: felt) {
+func USDC_contract_addrs() -> (USDC_address: felt) {
 }
 
 
@@ -54,7 +54,7 @@ func USDC_contract_addrs() -> (usdc_address: felt) {
         base_token_uri_len: felt,
         base_token_uri: felt*,
         // eth_address: felt,
-        usdc_address: felt,
+        USDC_address: felt,
     ) {
         ERC721.initializer(name, symbol);
         ERC721Enumerable.initializer();
@@ -65,7 +65,7 @@ func USDC_contract_addrs() -> (usdc_address: felt) {
         let sold_tickets = Uint256(0, 0);
         total_tickets_sold.write(sold_tickets);
         // ETH_contract_addrs.write(eth_address);
-        USDC_contract_addrs.write(usdc_address);
+        USDC_contract_addrs.write(USDC_address);
 
         Proxy.initializer(owner);
         return ();
@@ -168,7 +168,23 @@ func USDC_contract_addrs() -> (usdc_address: felt) {
 
     @external
     func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}() {
+        let (USDC_address) = USDC_contract_addrs.read();
+        let (user_adrs) = get_caller_address();
+        let (ticketsHandlerAdrs) = get_contract_address();
+        let (price) = ticketPrice();
 
+        // Get the user's asset
+        IERC20.transferFrom(contract_address=USDC_address, sender=user_adrs, recipient=ticketsHandlerAdrs, amount=price);
+
+        // Get the next TokenId
+        let (last_token_id: Uint256) = total_tickets_sold.read();
+        let (newTokenId: Uint256) = SafeUint256.add(last_token_id, Uint256(1, 0));
+
+        // Update the total nber of tickets sold
+        total_tickets_sold.write(newTokenId);
+
+        // Minting NFT to user
+        ERC721Enumerable._mint(user_adrs, newTokenId);
 
         return ();
     }
@@ -176,13 +192,13 @@ func USDC_contract_addrs() -> (usdc_address: felt) {
     // @external
     // func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}() {
     //     // let (eth_address) = ETH_contract_addrs.read();
-    //     let (usdc_address) = USDC_contract_addrs.read();
+    //     let (USDC_address) = USDC_contract_addrs.read();
     //     let (user_adrs) = get_caller_address();
     //     let (ticketsHandlerAdrs) = get_contract_address();
     //     let (BookKeeper) = owner();
     //     let (price: Uint256) = ticketPrice();
     //     with_attr error_message("Couldn't check asset allowance") {
-    //         let (allowed_amount: Uint256) = IERC20.allowance(contract_address=usdc_address, owner=user_adrs, spender=ticketsHandlerAdrs);
+    //         let (allowed_amount: Uint256) = IERC20.allowance(contract_address=USDC_address, owner=user_adrs, spender=ticketsHandlerAdrs);
     //     }
     //     with_attr error_message("incorrect allowance") {
     //         assert allowed_amount = price;
@@ -191,7 +207,7 @@ func USDC_contract_addrs() -> (usdc_address: felt) {
 
     //     // Getting paid
     //     let (success) = IERC20.transferFrom(
-    //         contract_address=usdc_address,
+    //         contract_address=USDC_address,
     //         sender=user_adrs,
     //         recipient=ticketsHandlerAdrs, // unless I am mistaken, it is impossible to have another recipient that "get_contract_address()" because of the ERC20 standard implementation of "transferFrom()" (=> https://github.com/OpenZeppelin/cairo-contracts/blob/main/src/openzeppelin/token/erc20/library.cairo#L122 -> _spend_allowance() takes the caller as recipient)
     //         // I am most likely mistaken, though!! just need to think this through! :P
@@ -217,16 +233,16 @@ func USDC_contract_addrs() -> (usdc_address: felt) {
     func burn{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(tokenId: Uint256) {
         ERC721.assert_only_token_owner(tokenId);
 
-        ERC721Enumerable._burn(tokenId);
-
         let (user_adrs) = get_caller_address();
         let (initial_deposit) = ticketPrice();
         // let (eth_address) = ETH_contract_addrs.read();
-        let (usdc_address) = USDC_contract_addrs.read();
-        let (success) = IERC20.transfer(contract_address=usdc_address, recipient=user_adrs, amount=initial_deposit);
+        let (USDC_address) = USDC_contract_addrs.read();
+        let (success) = IERC20.transfer(contract_address=USDC_address, recipient=user_adrs, amount=initial_deposit);
         with_attr error_message("deposit retrieval failed") {
             assert success = 1;
         }
+
+        ERC721Enumerable._burn(tokenId);
 
         return ();
     }
@@ -274,3 +290,8 @@ func USDC_contract_addrs() -> (usdc_address: felt) {
 
 
 // } // end of namespace
+
+
+
+
+
