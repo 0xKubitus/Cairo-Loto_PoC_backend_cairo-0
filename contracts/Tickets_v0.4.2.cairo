@@ -129,7 +129,7 @@ func USDC_contract_addrs() -> (usdc_address: felt) {
     @view
     func ticketPrice{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (price: Uint256) {
         // let unit_price = Uint256(1000000000000000, 0); // this is 0,001 ETH (18 decimals)
-        let unit_price = Uint256(10000000, 0); // this is 1 USDC (6 decimals)
+        let unit_price = Uint256(10000000, 0); // this is 10 USDC (6 decimals)
         return (price=unit_price);
     }
 
@@ -168,44 +168,50 @@ func USDC_contract_addrs() -> (usdc_address: felt) {
 
     @external
     func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}() {
-        // Ownable.assert_only_owner();
 
-        // let (eth_address) = ETH_contract_addrs.read();
-        let (usdc_address) = USDC_contract_addrs.read();
-        let (user_adrs) = get_caller_address();
-        let (ticketsHandlerAdrs) = get_contract_address();
-        let (BookKeeper) = owner();
-        let (price: Uint256) = ticketPrice();
-        with_attr error_message("Couldn't check asset allowance") {
-            let (allowed_amount: Uint256) = IERC20.allowance(contract_address=usdc_address, owner=user_adrs, spender=ticketsHandlerAdrs);
-        }
-        with_attr error_message("incorrect allowance") {
-            assert allowed_amount = price;
-        }
-        // If all the above is successful, then we can proceed to the next steps
-
-        // Getting paid
-        let (success) = IERC20.transferFrom(
-            contract_address=usdc_address,
-            sender=user_adrs,
-            recipient=ticketsHandlerAdrs, // unless I am mistaken, it is impossible to have another recipient that "get_contract_address()" because of the ERC20 standard implementation of "transferFrom()" (=> https://github.com/OpenZeppelin/cairo-contracts/blob/main/src/openzeppelin/token/erc20/library.cairo#L122 -> _spend_allowance() takes the caller as recipient)
-            // I am most likely mistaken, though!! just need to think this through! :P
-            amount=price
-        );
-        with_attr error_message("unable to charge the user") {
-            assert success = 1;
-        }
-
-        // Get the next TokenId
-        let (last_token_id: Uint256) = total_tickets_sold.read();
-        let (newTokenId: Uint256) = SafeUint256.add(last_token_id, Uint256(1, 0));
-        total_tickets_sold.write(newTokenId);
-
-        // Minting NFT to user
-        ERC721Enumerable._mint(user_adrs, newTokenId);
 
         return ();
     }
+// #############################################################################
+    // @external
+    // func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}() {
+    //     // let (eth_address) = ETH_contract_addrs.read();
+    //     let (usdc_address) = USDC_contract_addrs.read();
+    //     let (user_adrs) = get_caller_address();
+    //     let (ticketsHandlerAdrs) = get_contract_address();
+    //     let (BookKeeper) = owner();
+    //     let (price: Uint256) = ticketPrice();
+    //     with_attr error_message("Couldn't check asset allowance") {
+    //         let (allowed_amount: Uint256) = IERC20.allowance(contract_address=usdc_address, owner=user_adrs, spender=ticketsHandlerAdrs);
+    //     }
+    //     with_attr error_message("incorrect allowance") {
+    //         assert allowed_amount = price;
+    //     }
+    //     // If all the above is successful, then we can proceed to the next steps
+
+    //     // Getting paid
+    //     let (success) = IERC20.transferFrom(
+    //         contract_address=usdc_address,
+    //         sender=user_adrs,
+    //         recipient=ticketsHandlerAdrs, // unless I am mistaken, it is impossible to have another recipient that "get_contract_address()" because of the ERC20 standard implementation of "transferFrom()" (=> https://github.com/OpenZeppelin/cairo-contracts/blob/main/src/openzeppelin/token/erc20/library.cairo#L122 -> _spend_allowance() takes the caller as recipient)
+    //         // I am most likely mistaken, though!! just need to think this through! :P
+    //         amount=price
+    //     );
+    //     with_attr error_message("unable to charge the user") {
+    //         assert success = 1;
+    //     }
+
+    //     // Get the next TokenId
+    //     let (last_token_id: Uint256) = total_tickets_sold.read();
+    //     let (newTokenId: Uint256) = SafeUint256.add(last_token_id, Uint256(1, 0));
+    //     total_tickets_sold.write(newTokenId);
+
+    //     // Minting NFT to user
+    //     ERC721Enumerable._mint(user_adrs, newTokenId);
+
+    //     return ();
+    // }
+// #############################################################################
 
     @external
     func burn{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}(tokenId: Uint256) {
