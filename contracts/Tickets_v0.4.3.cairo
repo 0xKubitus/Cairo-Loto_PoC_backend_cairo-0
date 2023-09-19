@@ -38,6 +38,10 @@ func total_tickets_sold() -> (total_sold: Uint256) {
 func USDC_contract_addrs() -> (USDC_address: felt) {
 }
 
+@storage_var
+func zklend_market_addrs() -> (zklend_market: felt) {
+}
+
 
 
 // namespace ERC721_Tickets {
@@ -55,6 +59,7 @@ func USDC_contract_addrs() -> (USDC_address: felt) {
         base_token_uri: felt*,
         // eth_address: felt,
         USDC_address: felt,
+        zklend_market_address: felt,
     ) {
         ERC721.initializer(name, symbol);
         ERC721Enumerable.initializer();
@@ -64,8 +69,10 @@ func USDC_contract_addrs() -> (USDC_address: felt) {
         
         let sold_tickets = Uint256(0, 0);
         total_tickets_sold.write(sold_tickets);
+
         // ETH_contract_addrs.write(eth_address);
         USDC_contract_addrs.write(USDC_address);
+        zklend_market_addrs.write(zklend_market_address);
 
         Proxy.initializer(owner);
         return ();
@@ -168,7 +175,8 @@ func USDC_contract_addrs() -> (USDC_address: felt) {
 
     @external
     func mint{pedersen_ptr: HashBuiltin*, syscall_ptr: felt*, range_check_ptr}() {
-        let (USDC_address) = USDC_contract_addrs.read();
+        alloc_locals;
+        let (local USDC_address) = USDC_contract_addrs.read();
         let (user_adrs) = get_caller_address();
         let (ticketsHandlerAdrs) = get_contract_address();
         let (zkLendMarket) = zklend_market_addrs.read();
@@ -188,10 +196,10 @@ func USDC_contract_addrs() -> (USDC_address: felt) {
         ERC721Enumerable._mint(user_adrs, newTokenId);
 
         // Approving zkLend Market contract to spend 10 USDC (from ticketsHandler)
-        IERC20.approve(contract_address=USDC_address, spender=zkLendMarket, amount=price)
+        IERC20.approve(contract_address=USDC_address, spender=zkLendMarket, amount=price);
 
         // Depositing 10 USDC into zkLend's protocol
-        // IzkLendMarket.deposit(contract_address=zkLendMarket, ...)
+        // IzkLendMarket.deposit(contract_address=zkLendMarket, ...TO BE CONTINUED...)
 
         return ();
     }
