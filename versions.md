@@ -56,9 +56,17 @@ v0.4.2 - Mint() now requires 10 USDC instead of 0.001 ETH.
 
 - [deployed contract v0.4.2](https://testnet.starkscan.co/contract/0x07c4e99af60f7466b03347dbe1faa4f788776bf5e934c8ab5a911a45ca64d566/)
 
+v0.4.3 = minting ticket automaticaly deposits the user's USDC into zkLend
+
+- [deployed contract v0.4.3](https://testnet.starkscan.co/contract/0x05bb38d5bfb0e6b4918edc3a02839981afd49dd27b3566cba0d2be50333bed28)
+
+v0.4.4 = burning ticket withdraws the user's USDC from zkLend and sends them to user's account address
+
+- [deployed contract v0.4.4](https://testnet.starkscan.co/contract/0x00a0ca16d70d6cc5433a4892c6aec42d5b681e5842a741ad45876d2225ec4aee/)
+
 - v0.5 - xxx
 
-- [deployed contract v0.5](https://testnet.starkscan.co/contract/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+- [deployed contract v0.5](https://testnet.starkscan.co/contract/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/)
 
 </br>
 <hr>

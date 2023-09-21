@@ -4,9 +4,11 @@
 
 %lang starknet
 
-from starkware.cairo.common.cairo_builtins import HashBuiltin
-from starkware.cairo.common.uint256 import Uint256
 from starkware.starknet.common.syscalls import get_caller_address, get_contract_address
+from starkware.cairo.common.cairo_builtins import HashBuiltin
+from starkware.cairo.common.uint256 import Uint256 // , uint_to_felt // => Cannot import 'uint_to_felt' from 'starkware.cairo.common.uint256'
+// from starkware.cairo.common.uint256 import uint_to_felt // => Cannot import 'uint_to_felt' from 'starkware.cairo.common.uint256'
+from contracts.utils.UintToFelt import uint256_to_felt
 
 from openzeppelin.access.ownable.library import Ownable
 from openzeppelin.introspection.erc165.library import ERC165
@@ -20,6 +22,7 @@ from contracts.ERC721_Metadata_base import (
     ERC721_Metadata_setBaseTokenURI,
 )
 from contracts.interfaces.IERC20 import IERC20
+from contracts.interfaces.IzkLendMarket import IzkLendMarket
 
 
 
@@ -179,8 +182,9 @@ func zklend_market_addrs() -> (zklend_market: felt) {
         let (local USDC_address) = USDC_contract_addrs.read();
         let (user_adrs) = get_caller_address();
         let (ticketsHandlerAdrs) = get_contract_address();
-        let (zkLendMarket) = zklend_market_addrs.read();
+        let (local zkLendMarket) = zklend_market_addrs.read();
         let (price) = ticketPrice();
+        let (priceFelt) = uint256_to_felt(price);
 
         // Get the user's asset
         IERC20.transferFrom(contract_address=USDC_address, sender=user_adrs, recipient=ticketsHandlerAdrs, amount=price);
@@ -199,7 +203,7 @@ func zklend_market_addrs() -> (zklend_market: felt) {
         IERC20.approve(contract_address=USDC_address, spender=zkLendMarket, amount=price);
 
         // Depositing 10 USDC into zkLend's protocol
-        // IzkLendMarket.deposit(contract_address=zkLendMarket, ...TO BE CONTINUED...)
+        IzkLendMarket.deposit(contract_address=zkLendMarket, token=USDC_address, amount=priceFelt);
 
         return ();
     }
